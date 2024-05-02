@@ -41,11 +41,10 @@ CREATE TABLE Reservations(
 
 -- Insertion dans Clients :
 INSERT INTO Clients (nom, prenom, email, telephone, numero_carte_credit) 
-VALUES ('Dupont', 'Jean', 'jean.dupont@example.com', '1234567890', 1234567890123456),
-       ('Smith', 'Emily', 'emily.smith@example.com', '9876543210', 9876543210987654),
-       ('Garcia', 'Maria', 'maria.garcia@example.com', '5555555555', 5555555555555555),
-       ('Chen', 'Wei', 'wei.chen@example.com', '6666666666', 6666666666666666),
-       ('Kim', 'Ji-hyun', 'ji-hyun.kim@example.com', '4444444444', 4444444444444444);
+VALUES ('Gas', 'Romain', 'romain.gas@efrei.net', '1234567890', 1234567890123456),
+       ('Nadaud', 'Rayan', 'rayan.nadaud@efrei.net', '9876543210', 9876543210987654),
+       ('Boulouha', 'Amna', 'amna.boulouha@efrei.net', '5555555555', 5555555555555555);
+      
 
 -- Insertion dans Destinations : 
 INSERT INTO Destinations (nom, description, prix, image) 
@@ -59,16 +58,14 @@ VALUES ('Paris', 'La ville lumière', 500.00, NULL),
 INSERT INTO Voyages (id_voyage, id_destination, date_depart, date_retour, nb_places, prix, statut) 
 VALUES (1, 1, '2024-06-01', '2024-06-10', 50, 550.00, 'Disponible'),
        (2, 2, '2024-07-15', '2024-07-25', 40, 750.00, 'Disponible'),
-       (3, 3, '2024-08-10', '2024-08-20', 60, 850.00, 'Disponible'),
-       (4, 4, '2024-09-05', '2024-09-15', 45, 650.00, 'Disponible'),
-       (5, 5, '2024-10-20', '2024-10-30', 55, 950.00, 'Disponible');
+       (3, 3, '2024-08-10', '2024-08-20', 60, 850.00, 'Disponible');
+  
 
 INSERT INTO Reservations (id_reservation, id_client, id_voyage, date_reservation, statut) 
 VALUES (1, 1, 1, '2024-05-01', 'Confirmée'),
        (2, 2, 2, '2024-05-02', 'Confirmée'),
-       (3, 3, 3, '2024-05-03', 'En attente'),
-       (4, 4, 4, '2024-05-04', 'En attente'),
-       (5, 5, 5, '2024-05-05', 'Confirmée');
+       (3, 3, 3, '2024-05-03', 'En attente');
+     
 
 -- Vue Infos clients
 CREATE VIEW Infos_clients AS
@@ -107,4 +104,14 @@ JOIN Destinations d ON v.id_destination = d.id_destination;
 
 SELECT * from Details_reservations;
 
+-- Creer la vue Prochains Voyages 
+CREATE VIEW Prochains_voyages AS
+SELECT CONCAT(c.nom, ' ', c.prenom) AS nom_client, v.id_voyage, d.nom AS destination, v.date_depart, v.date_retour, v.nb_places, v.prix
+FROM Reservations r
+JOIN Clients c ON r.id_client = c.id_client
+JOIN Voyages v ON r.id_voyage = v.id_voyage
+JOIN Destinations d ON v.id_destination = d.id_destination
+WHERE v.date_depart BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY);
 
+-- Afficher les Prochains voyages 
+SELECT * From Prochains_voyages;
