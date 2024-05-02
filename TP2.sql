@@ -70,10 +70,41 @@ VALUES (1, 1, 1, '2024-05-01', 'Confirmée'),
        (4, 4, 4, '2024-05-04', 'En attente'),
        (5, 5, 5, '2024-05-05', 'Confirmée');
 
+-- Vue Infos clients
+CREATE VIEW Infos_clients AS
+SELECT CONCAT(nom, ' ', prenom) AS nom_complet, email, telephone
+FROM Clients;
 
+-- Afficher la vue Infos clients
+SELECT * FROM Infos_clients;
 
+-- Creation de la Vue Destination avec prix 
+CREATE VIEW Destinations_avec_prix AS
+SELECT nom, description, prix FROM Destinations;
 
+-- Afficher la Vue Destination avec prix
+SELECT * FROM Destinations_avec_prix;
 
+-- Creation de la Vue Voyages Disponibles
+CREATE VIEW Voyages_disponibles AS
+SELECT *
+FROM Voyages
+WHERE date_depart > CURDATE() AND nb_places > 0;
 
+-- Afficher la vue Voyages Disponibles
+SELECT * FROM Voyages_disponibles;
+
+-- Creer la vue Details reservation
+CREATE VIEW Details_reservations AS
+SELECT r.id_reservation, CONCAT(c.nom, ' ', c.prenom) AS nom_client, c.email AS email_client, c.telephone AS telephone_client, 
+       v.id_voyage, d.nom AS destination, v.date_depart, v.date_retour, v.nb_places, v.prix AS prix_voyage, r.date_reservation, r.statut
+FROM Reservations r
+JOIN Clients c ON r.id_client = c.id_client
+JOIN Voyages v ON r.id_voyagetrip = v.id_voyage
+JOIN Destinations d ON v.id_destination = d.id_destination;
+
+-- Afficher la vue Details Reservation
+
+SELECT * from Details_reservations;
 
 
