@@ -100,7 +100,7 @@ SELECT r.id_reservation, CONCAT(c.nom, ' ', c.prenom) AS nom_client, c.email AS 
        v.id_voyage, d.nom AS destination, v.date_depart, v.date_retour, v.nb_places, v.prix AS prix_voyage, r.date_reservation, r.statut
 FROM Reservations r
 JOIN Clients c ON r.id_client = c.id_client
-JOIN Voyages v ON r.id_voyagetrip = v.id_voyage
+JOIN Voyages v ON r.id_voyage = v.id_voyage
 JOIN Destinations d ON v.id_destination = d.id_destination;
 
 -- Afficher la vue Details Reservation
