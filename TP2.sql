@@ -115,3 +115,39 @@ WHERE v.date_depart BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY);
 
 -- Afficher les Prochains voyages 
 SELECT * From Prochains_voyages;
+
+-- Vue Destinations Populaires : 
+CREATE VIEW Destinations_populaires AS
+SELECT d.nom AS destination, COUNT(r.id_reservation) AS nombre_reservations
+FROM Reservations r
+JOIN Voyages v ON r.id_voyage = v.id_voyage
+JOIN Destinations d ON v.id_destination = d.id_destination
+GROUP BY d.nom
+ORDER BY COUNT(r.id_reservation) DESC;
+
+-- Afficher la Vue Destination Populaire
+SELECt * From Destinations_populaires;
+
+-- Creation Vue Voyage Populaire:
+CREATE VIEW Voyages_populaires AS
+SELECT v.id_voyage, d.nom AS destination, v.date_depart, v.date_retour, v.nb_places, v.prix, 
+       ((v.nb_places - COUNT(r.id_reservation)) / v.nb_places) * 100 AS pourcentage_places_restantes
+FROM Voyages v
+JOIN Destinations d ON v.id_destination = d.id_destination
+LEFT JOIN Reservations r ON v.id_voyage = r.id_voyage
+GROUP BY v.id_voyage
+HAVING pourcentage_places_restantes < 10;
+
+-- Afficher les Voyages Populaires : 
+SELECT * FROM Voyages_populaires;
+
+-- Creation Vue Voyages avec reservations : 
+CREATE VIEW Voyages_avec_réservations AS
+SELECT v.id_voyage, d.nom AS destination, v.date_depart, v.date_retour, v.nb_places, v.prix, COUNT(r.id_reservation) AS nombre_reservations
+FROM Voyages v
+JOIN Destinations d ON v.id_destination = d.id_destination
+LEFT JOIN Reservations r ON v.id_voyage = r.id_voyage
+GROUP BY v.id_voyage;
+
+-- Afficher Voyages Avec reservation :
+SELECT * FROM Voyages_avec_réservations;
