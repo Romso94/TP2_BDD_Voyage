@@ -151,3 +151,22 @@ GROUP BY v.id_voyage;
 
 -- Afficher Voyages Avec reservation :
 SELECT * FROM Voyages_avec_réservations;
+
+-- Creation de l'index prix sur la table destination 
+CREATE INDEX idx_prix ON Destinations (prix);
+
+-- Creation de l'index date_depart et date_retour sur la table voyage: 
+CREATE INDEX idx_date_voyage ON Voyages (date_depart, date_retour);
+
+-- Creation d'un index sur une VUE : 
+CREATE INDEX idx_nom_complet ON Infos_clients (nom_complet);
+
+-- Impossible car on creer un index sur une vue et non sur une table
+
+
+-- Creation d'un "CLIENT" pour simuler un cas
+CREATE USER 'client'@'localhost' IDENTIFIED BY '1234';
+GRANT SELECT ON tp2_bdd_voyage.Destinations_avec_prix TO 'client'@'localhost';
+GRANT SELECT ON tp2_bdd_voyage.Voyages_disponibles TO 'client'@'localhost';
+
+-- Creation 
