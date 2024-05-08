@@ -1,3 +1,4 @@
+-- Premiere Partie Creation des Tables Et Insertions d'exemples dans ces Tables 
 CREATE TABLE Clients(
 	id_client INT AUTO_INCREMENT,
 	nom VARCHAR(255) NOT NULL,
@@ -60,12 +61,14 @@ VALUES (1, 1, '2024-06-01', '2024-06-10', 50, 550.00, 'Disponible'),
        (2, 2, '2024-07-15', '2024-07-25', 40, 750.00, 'Disponible'),
        (3, 3, '2024-08-10', '2024-08-20', 60, 850.00, 'Disponible');
   
-
+-- Insertion dans Reservations :
 INSERT INTO Reservations (id_reservation, id_client, id_voyage, date_reservation, statut) 
 VALUES (1, 1, 1, '2024-05-01', 'Confirmée'),
        (2, 2, 2, '2024-05-02', 'Confirmée'),
        (3, 3, 3, '2024-05-03', 'En attente');
      
+
+-- Deuxième Partie Creation des Vues.
 
 -- Vue Infos clients
 CREATE VIEW Infos_clients AS
