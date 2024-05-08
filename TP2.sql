@@ -168,8 +168,25 @@ CREATE INDEX idx_nom_complet ON Infos_clients (nom_complet);
 
 
 -- Creation d'un "CLIENT" pour simuler un cas
-CREATE USER 'client'@'localhost' IDENTIFIED BY '1234';
+CREATE USER 'client'@'localhost' IDENTIFIED BY '12345';
 GRANT SELECT ON tp2_bdd_voyage.Destinations_avec_prix TO 'client'@'localhost';
 GRANT SELECT ON tp2_bdd_voyage.Voyages_disponibles TO 'client'@'localhost';
 
--- Creation 
+-- Creation de l'utilisateur agent_de_voyage 
+CREATE USER 'agent_de_voyage'@'localhost' IDENTIFIED BY '12345';
+-- Accorder les privilèges sur les tables
+GRANT SELECT, INSERT, UPDATE ON tp2_bdd_voyages.Clients TO 'agent_de_voyage'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON tp2_bdd_voyages.Destinations TO 'agent_de_voyage'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON tp2_bdd_voyages.Voyages TO 'agent_de_voyage'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON tp2_bdd_voyages.Reservations TO 'agent_de_voyage'@'localhost';
+
+
+-- Accorder les privilèges sur les vues
+GRANT SELECT ON tp2_bdd_voyages.Voyages_avec_réservations TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Voyages_populaires TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Destinations_populaires TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Prochains_voyages TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Details_reservations TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Voyages_disponibles TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Destinations_avec_prix TO 'agent_de_voyage'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Infos_clients TO 'agent_de_voyage'@'localhost';
