@@ -1,4 +1,4 @@
--- Premiere Partie Creation des Tables Et Insertions d'exemples dans ces Tables 
+-- Premiere Partie  : Creation des Tables Et Insertions d'exemples dans ces Tables 
 CREATE TABLE Clients(
 	id_client INT AUTO_INCREMENT,
 	nom VARCHAR(255) NOT NULL,
@@ -104,7 +104,6 @@ JOIN Voyages v ON r.id_voyage = v.id_voyage
 JOIN Destinations d ON v.id_destination = d.id_destination;
 
 -- Afficher la vue Details Reservation
-
 SELECT * from Details_reservations;
 
 -- Creer la vue Prochains Voyages 
@@ -158,6 +157,8 @@ SELECT * FROM Voyages_avec_réservations;
 -- Creation de l'index prix sur la table destination 
 CREATE INDEX idx_prix ON Destinations (prix);
 
+SELECT * from idx_prix;
+
 -- Creation de l'index date_depart et date_retour sur la table voyage: 
 CREATE INDEX idx_date_voyage ON Voyages (date_depart, date_retour);
 
@@ -167,10 +168,10 @@ CREATE INDEX idx_nom_complet ON Infos_clients (nom_complet);
 -- Impossible car on creer un index sur une vue et non sur une table
 
 
--- Creation d'un "CLIENT" pour simuler un cas
+-- Creation d'un "CLIENT" 
 CREATE USER 'client'@'localhost' IDENTIFIED BY '12345';
-GRANT SELECT ON tp2_bdd_voyage.Destinations_avec_prix TO 'client'@'localhost';
-GRANT SELECT ON tp2_bdd_voyage.Voyages_disponibles TO 'client'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Destinations_avec_prix TO 'client'@'localhost';
+GRANT SELECT ON tp2_bdd_voyages.Voyages_disponibles TO 'client'@'localhost';
 
 -- Creation de l'utilisateur agent_de_voyage 
 CREATE USER 'agent_de_voyage'@'localhost' IDENTIFIED BY '12345';
@@ -190,3 +191,28 @@ GRANT SELECT ON tp2_bdd_voyages.Details_reservations TO 'agent_de_voyage'@'local
 GRANT SELECT ON tp2_bdd_voyages.Voyages_disponibles TO 'agent_de_voyage'@'localhost';
 GRANT SELECT ON tp2_bdd_voyages.Destinations_avec_prix TO 'agent_de_voyage'@'localhost';
 GRANT SELECT ON tp2_bdd_voyages.Infos_clients TO 'agent_de_voyage'@'localhost';
+
+-- Création de la vue pour le nom complet des clients
+CREATE VIEW Nom_Complet_Clients AS
+SELECT CONCAT(nom, ' ', prenom) AS nom_complet
+FROM tp2_bdd_voyages.Clients;
+
+-- Accorder les privilèges à l'utilisateur "client" sur la vue
+GRANT SELECT ON tp2_bdd_voyages.Nom_Complet_Clients TO 'client'@'localhost';
+
+-- Se connecter sur la connexion de l'agent de voyage 
+-- Requête de l'agent de voyage pour ajouter un nouveau client
+INSERT INTO tp2_bdd_voyages.Clients (nom, prenom, email, telephone, numero_carte_credit)
+VALUES ('Nouveau', 'Client', 'nouveau.client@example.com', '123456789', '9876543210123456');
+
+-- Requête de l'agent de voyage pour réserver un voyage pour le nouveau client
+INSERT INTO tp2_bdd_voyages.Reservations (id_reservation, id_client, id_voyage, date_reservation, statut)
+VALUES (6, (SELECT id_client FROM tp2_bdd_voyages.Clients WHERE nom = 'Nouveau' AND prenom = 'Client'),
+(SELECT id_voyage FROM tp2_bdd_voyages.Voyages_disponibles
+LIMIT 1), CURDATE(), 'Confirmée');
+
+
+
+
+
+
